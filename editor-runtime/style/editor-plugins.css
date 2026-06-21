@@ -514,9 +514,10 @@
   margin: 0;
   top: 0;
   -webkit-appearance: none;
-  background-image: url(../image/content-icon.svg);
-  background-size: 430px 350px;
-  background-position: -100px 0px;
+  appearance: none;
+  background: #fff;
+  border: 1px solid #b0b8c4;
+  border-radius: 3px;
   display: inline-block;
   font-size: 0;
   line-height: 0;
@@ -526,7 +527,20 @@
 }
 
 .keditor-link-panel .footer .form-checkbox:checked {
-  background-position: -80px 0px;
+  background: #3c4043;
+  border-color: #3c4043;
+}
+
+.keditor-link-panel .footer .form-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 3px;
+  height: 7px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .keditor-link-panel .footer .checkbox-text {
