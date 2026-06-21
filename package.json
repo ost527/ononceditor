@@ -19,6 +19,7 @@
     "editor-runtime",
     "styles.css",
     "README.md",
+    "README.ko.md",
     "LICENSE"
   ],
   "main": "./dist/index.cjs",
