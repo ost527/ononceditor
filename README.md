@@ -95,8 +95,4 @@ from a CDN (jsDelivr)** — not bundled, so they need network access (self-host 
 adjust `CODEBLOCK` / `getContentCss` for offline use). Third-party license texts
 ship at `editor-runtime/THIRD-PARTY-LICENSES.txt`.
 
-> Note: inserting an image **by URL** falls back to a Daum thumbnail proxy
-> (`t1.daumcdn.net`) when a direct fetch fails — a remnant of the upstream image
-> plugin. Direct file uploads to your `uploadUrl` are unaffected.
-
 This project is **not affiliated with or endorsed by Kakao/Tistory**.
