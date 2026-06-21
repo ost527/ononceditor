@@ -38,7 +38,7 @@ export type RichTextEditorProps = {
   onChange?: (html: string) => void;
   /** Upload endpoint for inline images (defaults to the runtime KIMAGE.upload_url). */
   uploadUrl?: string;
-  /** Base path where the KEDITOR runtime assets are served (default "/keditor"). */
+  /** Base path where the KEDITOR runtime assets are served (default "/editor-runtime"). */
   baseUrl?: string;
   /** Initial editor body height in px. */
   initialHeight?: number;
@@ -52,14 +52,14 @@ export type RichTextEditorProps = {
  * actions, no domain types, no form) — wire persistence via `onChange`.
  *
  * Requires the KEDITOR runtime assets to be served at `baseUrl` (default
- * "/keditor") and the editor chrome stylesheet imported once by the host
+ * "/editor-runtime") and the editor chrome stylesheet imported once by the host
  * (`import "ononceditor/styles.css"`).
  */
 export function RichTextEditor({
   defaultValue = "",
   onChange,
   uploadUrl,
-  baseUrl = "/keditor",
+  baseUrl = "/editor-runtime",
   initialHeight = DEFAULT_BODY_HEIGHT,
 }: RichTextEditorProps) {
   // Per-instance DOM id so multiple editors can coexist on one page.
@@ -188,7 +188,7 @@ export function RichTextEditor({
               if (b) b.classList.toggle("is-empty", ed.dom.isEmpty(b));
             };
             ed.on("init SetContent input keyup NodeChange", togglePlaceholder);
-            ed.addButton("tistory-mode", {
+            ed.addButton("oe-mode", {
               type: "menubutton",
               text: "기본모드",
               tooltip: "모드 전환",
@@ -200,7 +200,7 @@ export function RichTextEditor({
                 { text: "HTML", onclick: () => setModeRef.current(true) },
               ],
             });
-            ed.addButton("tistory-plugins", {
+            ed.addButton("oe-more", {
               type: "menubutton",
               icon: "more",
               tooltip: "더보기",

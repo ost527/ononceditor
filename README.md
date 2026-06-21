@@ -23,12 +23,12 @@ Peer deps: `react >=18`, `react-dom >=18`.
 
 ## 1) Serve the runtime assets
 
-This package bundles the trimmed KEDITOR runtime under `ononceditor/keditor`.
+This package bundles the trimmed KEDITOR runtime under `ononceditor/editor-runtime`.
 Copy it into a directory your app serves statically, so it is reachable at
-`baseUrl` (default `/keditor`). For a Next.js app:
+`baseUrl` (default `/editor-runtime`). For a Next.js app:
 
 ```bash
-cp -R node_modules/ononceditor/keditor public/keditor
+cp -R node_modules/ononceditor/editor-runtime public/editor-runtime
 ```
 
 (Automate it in a `postinstall`/`prebuild` script so it survives clean installs.)
@@ -71,7 +71,7 @@ export function MyEditor() {
 | `defaultValue` | `string` | `""` | Initial HTML. The editor owns its content after mount (uncontrolled). |
 | `onChange` | `(html: string) => void` | – | Fires with the latest HTML on every change. |
 | `uploadUrl` | `string` | `/api/upload` | Endpoint that receives image uploads. |
-| `baseUrl` | `string` | `/keditor` | Where the runtime assets are served. |
+| `baseUrl` | `string` | `/editor-runtime` | Where the runtime assets are served. |
 | `initialHeight` | `number` | `620` | Initial editor body height (px). |
 
 ### Upload endpoint contract
@@ -83,8 +83,8 @@ respond with JSON `{ "url": "https://…", "filename": "…", "location": "…" 
 
 The **ononceditor wrapper code** is [MIT](./LICENSE).
 
-The bundled editor runtime under `keditor/` is **KEDITOR** (a TinyMCE 4.x fork),
-**GNU LGPL v2.1** — license text ships at `keditor/LICENSE`; corresponding
+The bundled editor runtime under `editor-runtime/` is **KEDITOR** (a TinyMCE 4.x fork),
+**GNU LGPL v2.1** — license text ships at `editor-runtime/LICENSE`; corresponding
 source: the official KEDITOR release and <https://github.com/tinymce/tinymce>.
 The code-block feature bundles **CodeMirror** (MIT) and **highlight.js**
 (BSD-3-Clause). Fonts referenced by the editor (Pretendard, Noto, Nanum) are

@@ -4,7 +4,7 @@ import { CHARMAP_ITEMS } from "./charmap-data";
 
 /**
  * Loads the self-hosted KEDITOR (TinyMCE 4.9.6 fork) distribution from a
- * consumer-served base path (default "/keditor"). The core is loaded once;
+ * consumer-served base path (default "/editor-runtime"). The core is loaded once;
  * TinyMCE then auto-loads the theme, language and plugins from `base_url`
  * (set in tinymce.init) because the dist uses unhashed filenames
  * (themes/classic/theme.min.js, plugins/<name>/plugin.min.js, langs/ko_KR.min.js).
@@ -13,7 +13,7 @@ import { CHARMAP_ITEMS } from "./charmap-data";
  * the classic skin CSS is auto-loaded by TinyMCE via `skin: "classic"`.
  */
 
-const DEFAULT_BASE = "/keditor";
+const DEFAULT_BASE = "/editor-runtime";
 
 let corePromise: Promise<void> | null = null;
 
@@ -56,7 +56,7 @@ export function getContentCss(baseUrl: string = DEFAULT_BASE): string[] {
   return [
     "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css",
     `${baseUrl}/style/editor-content.css`,
-    `${baseUrl}/style/tistory/content.css`,
+    `${baseUrl}/style/content-overrides.css`,
   ];
 }
 
@@ -127,7 +127,7 @@ export const PLUGINS =
 
 export const TOOLBAR =
   "styleFormat fontSelect | bold italic underline strikethrough colorPalette backColorPalette | " +
-  "kalignleft kaligncenter kalignright kalignjustify | kImage blockquoteList simpleTable klink kList hrList tistory-plugins | tistory-mode";
+  "kalignleft kaligncenter kalignright kalignjustify | kImage blockquoteList simpleTable klink kList hrList oe-more | oe-mode";
 
 /** kImage settings — multi-image grid + click context menu + LOCAL upload.
  *  `upload_url` is overridden per-instance by the RichTextEditor `uploadUrl` prop. */
