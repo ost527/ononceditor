@@ -825,7 +825,7 @@ body .mce-white-dialog {
 }
 
 .grammar_close {
-  background: url(../image/content-icon.svg) no-repeat;
+  background: none no-repeat;
   background-position: -80px -20px;
   position: absolute;
   width: 12px;
@@ -985,7 +985,7 @@ body .mce-white-dialog {
 }
 
 .container_imageSlide .body .wrap_item.hover button.removeImageButton {
-  background: url(../image/content-icon.svg) no-repeat;
+  background: none no-repeat;
   background-position: -320px 0;
   position: absolute;
   right: -1px;
@@ -1008,7 +1008,7 @@ body .mce-white-dialog {
 
 .container_imageSlide .body .addImageIcon {
   position: absolute;
-  background: url(../image/content-icon.svg) no-repeat;
+  background: none no-repeat;
   background-position: -300px 0;
   width: 18px;
   height: 18px;
@@ -1125,7 +1125,7 @@ body .mce-white-dialog {
   float: left;
   display: block;
   margin: 8px;
-  background: url(../image/content-icon.svg) no-repeat;
+  background: none no-repeat;
   background-size: 430px 350px;
   cursor: pointer;
   position: relative;
@@ -1149,7 +1149,7 @@ body .mce-white-dialog {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: url(../image/content-icon.svg) no-repeat;
+  background: none no-repeat;
   background-size: 430px 350px;
   background-position: -145px -6px;
   width: 10px;
@@ -1228,7 +1228,7 @@ body .mce-white-dialog {
   position: absolute;
   width: 58px;
   height: 36px;
-  background: url('../image/content-icon.svg') no-repeat;
+  background: none no-repeat;
   background-size: 430px 350px;
   background-position: 0 -60px;
   outline: 0 none;
@@ -1246,7 +1246,7 @@ body .mce-white-dialog {
 }
 
 .mce-hr.mce-menu-item .mce-ico {
-  background: url(../image/content-icon.svg) no-repeat;
+  background: none no-repeat;
   background-size: 430px 350px;
   width: 146px;
   padding: 0;
@@ -1337,7 +1337,7 @@ body .mce-white-dialog {
 .emoticon_keyboard .emoticon_control .emt_ctrl_paging span {text-indent:-9999px;overflow:hidden;display:block;width:10px;height:18px;margin:13px 16px;}
 .emoticon_keyboard .emoticon_tab {border-bottom: 1px solid #eeeeee;height:45px;margin-left:0;}
 .emoticon_keyboard .emoticon_tab li {position:relative;width:52px;float:left;height:45px;display: flex;justify-content: center;align-items: center;}
-.emoticon_keyboard .emoticon_tab li button {background: url(../image/sprites-emoticon@2x.png) no-repeat;width:24px;height: 24px;background-size: 400px 60px; }
+.emoticon_keyboard .emoticon_tab li button {background: none no-repeat;width:24px;height: 24px;background-size: 400px 60px; }
 .emoticon_keyboard .emoticon_tab .emt_tab_item {display:block;text-decoration:none;text-align: center;}
 .emoticon_keyboard .emoticon_tab .emot_tab_item_favorites {background-position: 0 -2px;}
 .emoticon_keyboard .emoticon_tab .emot_tab_item_friends1 {background-position: -30px -2px;}

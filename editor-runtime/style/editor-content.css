@@ -940,7 +940,7 @@ figure[data-ke-type='file'] .image {
   float: left;
   width: 30px;
   height: 30px;
-  background: url(../image/content-icon.svg);
+  background: none;
   margin: 22px 17px 21px 22px;
   background-position: 0 0;
 }
@@ -1245,7 +1245,7 @@ figure[data-ke-type='poll'] .header .logo_wrap {
 figure[data-ke-type='poll'] .header .logo_img {
   width: 19px;
   height: 19px;
-  background: url(../image/toolbar-icon.svg) no-repeat;
+  background: none no-repeat;
   background-position: -300px 0;
   margin: 0;
 }
