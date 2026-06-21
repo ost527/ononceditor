@@ -527,9 +527,7 @@
 }
 
 .keditor-link-panel .footer .form-checkbox:checked {
-  background-color: #3c4043;
-  border-color: #3c4043;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.4 6.7 11.1 12.3 4.9' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.4 6.7 11.1 12.3 4.9' fill='none' stroke='%230f172a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 12px 12px;
@@ -1431,10 +1429,6 @@ body .mce-white-dialog {
 }
 .keditor-link-panel .footer .form-field {
   margin-bottom: 18px;
-}
-.keditor-link-panel .footer .form-checkbox:checked {
-  background-color: var(--color-primary, #4f46e5);
-  border-color: var(--color-primary, #4f46e5);
 }
 .keditor-link-panel .footer .checkbox-text {
   font-family: inherit;
