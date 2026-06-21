@@ -8,7 +8,7 @@ export default defineConfig({
   entry: ["src/index.ts"],
   format: ["esm", "cjs"],
   dts: true,
-  sourcemap: true,
+  sourcemap: false,
   clean: true,
   external: ["react", "react-dom"],
   // Preserve the React Server Components "use client" boundary on the bundle.

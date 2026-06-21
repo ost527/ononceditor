@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "description": "WYSIWYG rich-text editor for React, built on a self-hosted KEDITOR (TinyMCE 4.x) runtime. Outputs sanitizable HTML; bring your own image-upload endpoint.",
   "license": "MIT",
+  "author": "ononc",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-name/ononceditor.git"
+  },
+  "homepage": "https://github.com/your-name/ononceditor#readme",
+  "bugs": "https://github.com/your-name/ononceditor/issues",
   "type": "module",
   "sideEffects": [
     "*.css"

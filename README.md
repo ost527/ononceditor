@@ -86,8 +86,17 @@ The **ononceditor wrapper code** is [MIT](./LICENSE).
 The bundled editor runtime under `editor-runtime/` is **KEDITOR** (a TinyMCE 4.x fork),
 **GNU LGPL v2.1** — license text ships at `editor-runtime/LICENSE`; corresponding
 source: the official KEDITOR release and <https://github.com/tinymce/tinymce>.
-The code-block feature bundles **CodeMirror** (MIT) and **highlight.js**
-(BSD-3-Clause). Fonts referenced by the editor (Pretendard, Noto, Nanum) are
-under the SIL Open Font License 1.1.
+The bundled KEDITOR runtime has been **modified** from upstream 0.7.21 (trimmed
+plugins, re-skinned icons, patched link plugin, adjusted styles).
+
+The code-block feature **bundles CodeMirror** (MIT). **highlight.js**
+(BSD-3-Clause syntax theme) and the **Pretendard** font are **loaded at runtime
+from a CDN (jsDelivr)** — not bundled, so they need network access (self-host and
+adjust `CODEBLOCK` / `getContentCss` for offline use). Third-party license texts
+ship at `editor-runtime/THIRD-PARTY-LICENSES.txt`.
+
+> Note: inserting an image **by URL** falls back to a Daum thumbnail proxy
+> (`t1.daumcdn.net`) when a direct fetch fails — a remnant of the upstream image
+> plugin. Direct file uploads to your `uploadUrl` are unaffected.
 
 This project is **not affiliated with or endorsed by Kakao/Tistory**.

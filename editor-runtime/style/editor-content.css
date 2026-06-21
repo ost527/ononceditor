@@ -369,8 +369,7 @@ figure[data-ke-type='video'][data-video-host] iframe {
 
 /* image */
 /**
- * https://jira.daumkakao.com/browse/KE-4946
- * ios 용 image wrapper 용, ipad 의 selection 을 제거(Z-index 에 영향을 줌)
+ * ios image wrapper: removes the ipad selection (affects z-index)
  */
 figure[data-ke-type='image'] div > img,
 figure[data-ke-type='image'] div > a > img {
