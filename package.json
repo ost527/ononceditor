@@ -1,7 +1,7 @@
 {
   "name": "ononceditor",
   "version": "0.1.0",
-  "description": "Tistory-style rich-text editor for React, built on a self-hosted KEDITOR (TinyMCE 4.x) runtime. Outputs sanitizable HTML; bring your own image-upload endpoint.",
+  "description": "WYSIWYG rich-text editor for React, built on a self-hosted KEDITOR (TinyMCE 4.x) runtime. Outputs sanitizable HTML; bring your own image-upload endpoint.",
   "license": "MIT",
   "type": "module",
   "sideEffects": [

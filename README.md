@@ -1,6 +1,6 @@
 # ononceditor
 
-A Tistory-style rich-text editor for **React**, built on a self-hosted
+A WYSIWYG rich-text editor for **React**, built on a self-hosted
 [KEDITOR](https://t1.daumcdn.net/keditor/opensource/KEDITOR-0.7.21.zip)
 (TinyMCE 4.x fork) runtime. It is a **props-driven, controlled-ish component**:
 you give it initial HTML and receive HTML on change — persistence, forms and
