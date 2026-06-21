@@ -252,17 +252,6 @@ figure[data-ke-type='video'] img {
   max-width: 100%;
 }
 
-figure[data-ke-type='video'][data-video-host='kakaotv'] .video_content::after {
-  content: '';
-  position: absolute;
-  display: block;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.25);
-}
-
 figure[data-ke-type='video'] .video_title {
   position: absolute;
   top: 10px;
@@ -612,18 +601,6 @@ img::selection {
   background: #e6f5ff !important;
 }
 
-/* 이모티콘 emoticon */
-.kakao_emoticon {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.view_emot_detail {
-  display: none !important;
-}
-
 /* 맞춤법 검사기 */
 
 span[data-grammar] {
@@ -700,21 +677,6 @@ figure[data-ke-type='opengraph']:hover div.og-image button {
   width: 15px;
   height: 15px;
 }
-
-/* og 삭제 버튼인데 나중에 버튼 이미지 받아서 추가 */
-
-/* figure[data-ke-type="opengraph"]:hover div.og-image button i {
-  cursor: pointer;
-  background: url(../image/editor-plugins-icons@2x.png) no-repeat 0 0;
-  background-size: 52px 52px;
-  background-position: 0 -13px;
-  width: 20px;
-  height: 20px;
-} */
-
-/* figure[data-ke-type="opengraph"]:hover div.og-image button i:before {
-  content: "";
-} */
 
 figure[data-ke-type='opengraph'] p.og-title {
   color: #000000;

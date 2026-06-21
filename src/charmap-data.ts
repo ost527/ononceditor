@@ -1,7 +1,6 @@
-// Tistory's exact 특수문자 (special character) set, extracted from the genuine
-// KEDITOR/Tistory post-editor build (kCharmap `items`). Each entry is
+// Special-character (특수문자) set for the kCharmap plugin. Each entry is
 // [decimalCodePoint, englishName]; the char = String.fromCharCode(code).
-// Rendered by the kCharmap plugin as a 17-column grid (matches Tistory).
+// Rendered by the kCharmap plugin as a 17-column grid.
 export const CHARMAP_ITEMS: [number, string][] = [
   [8251, "Reference Mark"], [9734, "White Star"], [9733, "Black Star"], [9675, "White Circle"],
   [9679, "Black Circle"], [9678, "Bullseye"], [9671, "White Diamond"], [9670, "Black Diamond"],
