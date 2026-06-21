@@ -1399,7 +1399,7 @@ body .mce-white-dialog {
 }
 .keditor-link-panel .body {
   padding: 16px;
-  border-bottom: 1px solid var(--color-border, #e6e8ee);
+  border-bottom: none;
 }
 .keditor-link-panel .keditor-form .form-field .form-text {
   font-family: inherit;
