@@ -35,7 +35,8 @@ The bundled KEDITOR runtime has been MODIFIED from the upstream 0.7.21 release
 plugin patched, and stylesheets adjusted. All such changes are confined to the
 files under `editor-runtime/`.
 
-The code-block feature bundles CodeMirror (MIT). Syntax highlighting
+The code-block feature bundles CodeMirror (MIT), and the runtime bundles the
+core-js and regenerator-runtime polyfills (MIT). Syntax highlighting
 (highlight.js, BSD-3-Clause) and the Pretendard font are loaded at runtime from a
 CDN (jsDelivr) rather than bundled. Third-party license texts ship at
 `editor-runtime/THIRD-PARTY-LICENSES.txt`.

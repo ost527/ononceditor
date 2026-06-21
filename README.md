@@ -89,7 +89,8 @@ source: the official KEDITOR release and <https://github.com/tinymce/tinymce>.
 The bundled KEDITOR runtime has been **modified** from upstream 0.7.21 (trimmed
 plugins, re-skinned icons, patched link plugin, adjusted styles).
 
-The code-block feature **bundles CodeMirror** (MIT). **highlight.js**
+The code-block feature **bundles CodeMirror** (MIT), and the runtime bundles the
+**core-js** / **regenerator-runtime** polyfills (MIT). **highlight.js**
 (BSD-3-Clause syntax theme) and the **Pretendard** font are **loaded at runtime
 from a CDN (jsDelivr)** — not bundled, so they need network access (self-host and
 adjust `CODEBLOCK` / `getContentCss` for offline use). Third-party license texts
