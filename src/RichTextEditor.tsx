@@ -24,6 +24,7 @@ import {
   KPASTE,
   KCHARMAP,
 } from "./keditor-runtime";
+import { makeResizingUploadHandler } from "./resize-image";
 
 /** Editor body height (px) — shared by WYSIWYG and HTML-source modes so the two
  *  stay the same size, and adjustable via the drag handle below the editor. */
@@ -42,6 +43,9 @@ export type RichTextEditorProps = {
   baseUrl?: string;
   /** Initial editor body height in px. */
   initialHeight?: number;
+  /** Downscale inserted images so their longest side is <= this many px (in the
+   *  browser, before upload). Set to 0 to disable. Default 1920. */
+  maxImageDimension?: number;
 };
 
 /**
@@ -61,6 +65,7 @@ export function RichTextEditor({
   uploadUrl,
   baseUrl = "/editor-runtime",
   initialHeight = DEFAULT_BODY_HEIGHT,
+  maxImageDimension = 1920,
 }: RichTextEditorProps) {
   // Per-instance DOM id so multiple editors can coexist on one page.
   const editorId = "rte-" + useId().replace(/[^a-zA-Z0-9_-]/g, "");
@@ -131,6 +136,7 @@ export function RichTextEditor({
         const tinymce = (window as any).tinymce;
         if (!tinymce) return;
         tinymce.get(editorId)?.remove();
+        const imageUploadUrl = uploadUrl ?? KIMAGE.upload_url;
         tinymce.init({
           selector: "#" + editorId,
           // TinyMCE auto-loads theme/plugins/skin from here (unhashed dist).
@@ -171,7 +177,14 @@ export function RichTextEditor({
           formats: FORMATS,
           simpleTable: { is_grid: true, align: "center" },
           klink: { is_panel: true, auto_link: true, align: "center" },
-          kImage: uploadUrl ? { ...KIMAGE, upload_url: uploadUrl } : KIMAGE,
+          kImage: {
+            ...KIMAGE,
+            upload_url: imageUploadUrl,
+            upload_handler: makeResizingUploadHandler(
+              imageUploadUrl,
+              maxImageDimension,
+            ),
+          },
           kPaste: KPASTE,
           kCharmap: KCHARMAP,
           extended_valid_elements:
