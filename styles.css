@@ -1,0 +1,664 @@
+/* =========================================================================
+   PostEditor (write screen) — our own layout (B안), design-system aligned.
+   No Tistory production CSS / sprites / branding. The editor chrome comes from
+   the official KEDITOR-0.7.21 classic skin; this file lays out the surrounding
+   page (category, title, body, tags, action bar, modals) using @theme tokens.
+   ========================================================================= */
+
+.pe {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 96px;
+  font-family: var(--font-sans);
+}
+
+/* compact the classic-skin toolbar so the buttons fit in one row */
+.pe-body .mce-toolbar .mce-btn button {
+  padding: 4px 4px;
+}
+.pe-body .mce-toolbar .mce-first {
+  padding-left: 2px;
+}
+/* 문단모양(styleFormat) + 글꼴(fontSelect) dropdown BUTTON labels: the plugins
+   force a wide 126px label; size them compactly. Each width is tuned so the
+   label clears the absolutely-positioned caret (▾) with ~10px gap. */
+.pe-body .mce-btn[aria-label="문단모양"] .mce-txt {
+  width: 56px !important;
+}
+.pe-body .mce-btn[aria-label="글꼴"] .mce-txt {
+  width: 82px !important;
+}
+.pe-body .mce-btn[aria-label="문단모양"] .mce-txt,
+.pe-body .mce-btn[aria-label="글꼴"] .mce-txt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Dropdown POPUP menus render at <body> level (outside .pe-body). post-editor.css
+   only loads with PostEditor, so these rules stay scoped to the editor page.
+   The plugins force ~185px-wide menus — shrink them to fit their content. */
+.mce-styleFormat.mce-menu,
+.mce-fontSelect.mce-menu {
+  width: 100px !important;
+  min-width: 0 !important;
+}
+/* These size/font menus have no real icon, but the plugin's item markup leaves a
+   stray whitespace text node before the label. font-size:0 on the item collapses
+   that node to 0 width (the label keeps its own size: styleFormat sizes are
+   inline px; fontSelect's is restored below), so the label left-aligns cleanly
+   from the padding edge instead of being pushed right. */
+.mce-styleFormat .mce-menu-item,
+.mce-fontSelect .mce-menu-item {
+  text-align: left !important;
+  font-size: 0 !important;
+  padding-left: 11px !important;
+  padding-right: 8px !important;
+}
+.mce-fontSelect .mce-menu-item .mce-text {
+  font-size: 0.875rem !important;
+}
+.mce-styleFormat .mce-menu-item .mce-ico,
+.mce-fontSelect .mce-menu-item .mce-ico {
+  display: none !important;
+}
+/* 인용(blockquoteList) + 리스트(kList): icon-only — hide the text labels and
+   shrink the menu to just the icon column. */
+.mce-blockquoteList.mce-menu,
+.mce-kList.mce-menu {
+  width: 48px !important;
+  min-width: 0 !important;
+}
+.mce-blockquoteList .mce-menu-item .mce-text,
+.mce-kList .mce-menu-item .mce-text {
+  display: none !important;
+}
+
+/* hide kImage's representative-image badge (대표) — Tistory backend leftover */
+.mce-represent-image-btn {
+  display: none !important;
+}
+
+/* 배경색(hilitecolor) swatch: the dist renders the empty preview as a harsh
+   17x17 hollow box (border rgba(0,0,0,.2) + transparent) over the letter, which
+   looks distorted. Use a clean DS chip for the empty/default state; the selected
+   color (set inline by the plugin) still overrides the fill. */
+.pe-body .mce-tinymce .mce-hilitecolor.mce-colorbutton .mce-preview {
+  top: 4px;
+  left: 4px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-muted);
+}
+
+/* category */
+.pe-cat {
+  margin-bottom: 14px;
+}
+.pe-cat-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-card);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-muted-foreground);
+  cursor: pointer;
+}
+.pe-cat-btn:hover {
+  border-color: var(--color-ink-300);
+  color: var(--color-foreground);
+}
+
+/* title */
+.pe-title {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  outline: 0;
+  resize: none;
+  overflow: hidden;
+  padding: 4px 2px 14px;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--color-foreground);
+  font-family: inherit;
+}
+.pe-title::placeholder {
+  color: var(--color-ink-300);
+  font-weight: 800;
+}
+
+/* editor body */
+.pe-body {
+  margin-top: 18px;
+}
+/* soften the classic-skin editor frame */
+.pe-body .mce-tinymce {
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: none !important;
+}
+.pe-body .mce-edit-area iframe {
+  background: var(--color-card);
+}
+
+/* HTML edit (source) mode — show the HTML source IN the editor body (in place of
+   the WYSIWYG content area), not as a separate panel below. The toolbar stays so
+   기본모드 can toggle back; the source textarea connects seamlessly under it. */
+.pe-body--source .mce-tinymce .mce-edit-area {
+  display: none !important;
+}
+.pe-body--source .mce-tinymce {
+  border-bottom: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.pe-source {
+  display: block;
+  width: calc(100% + 2px);
+  box-sizing: border-box;
+  height: 580px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-foreground);
+  background: var(--color-card);
+  resize: none;
+  overflow-y: auto;
+  outline: none;
+}
+
+/* Shared drag handle below the editor. Resizes the body height in BOTH modes
+   (the WYSIWYG iframe via theme.resizeTo, the source textarea via inline height)
+   so the two modes stay the same size and are both vertically resizable. */
+.pe-resize {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  margin-top: 2px;
+  cursor: ns-resize;
+  touch-action: none;
+}
+.pe-resize::before {
+  content: "";
+  width: 44px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-border);
+  transition: background 0.15s;
+}
+.pe-resize:hover::before {
+  background: var(--color-ink-300);
+}
+
+/* tags */
+.pe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 22px;
+}
+.pe-tags-hash {
+  color: var(--color-ink-400);
+  font-weight: 700;
+}
+.pe-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 4px 0 10px;
+  border-radius: 999px;
+  background: var(--color-muted);
+  font-size: 0.82rem;
+  color: var(--color-foreground);
+}
+.pe-tag button {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: var(--color-ink-400);
+  font-weight: 700;
+}
+.pe-tag button:hover {
+  background: var(--color-ink-200);
+  color: var(--color-muted-foreground);
+}
+.pe-tag-input {
+  flex: 1;
+  min-width: 120px;
+  height: 30px;
+  border: 0;
+  outline: 0;
+  font-size: 0.88rem;
+  color: var(--color-foreground);
+  background: transparent;
+}
+
+/* bottom action bar (functional; design-system styling later) */
+.pe-bar {
+  position: sticky;
+  bottom: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-card) 95%, transparent);
+  backdrop-filter: saturate(180%) blur(6px);
+  box-shadow: var(--shadow-lg);
+}
+.pe-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.pe-oss {
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: var(--color-ink-400);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pe-oss:hover {
+  color: var(--color-muted-foreground);
+  text-decoration: underline;
+}
+.pe-bar-right {
+  display: flex;
+  gap: 8px;
+}
+.pe-btn {
+  height: 38px;
+  padding: 0 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  cursor: pointer;
+}
+.pe-btn:hover {
+  border-color: var(--color-ink-300);
+}
+.pe-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.pe-btn-primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+.pe-btn-primary:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+/* publish / preview modals */
+.pe-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: color-mix(in srgb, var(--color-foreground) 45%, transparent);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.pe-panel {
+  width: 100%;
+  max-width: 460px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--color-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.pe-panel.preview {
+  max-width: 880px;
+}
+.pe-panel h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-foreground);
+}
+.pe-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pe-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-foreground);
+}
+.pe-panel input,
+.pe-panel textarea {
+  border: 1px solid var(--color-input);
+  border-radius: var(--radius-md);
+  padding: 9px 11px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--color-foreground);
+}
+.pe-seg {
+  display: inline-flex;
+  border: 1px solid var(--color-input);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  width: fit-content;
+}
+.pe-seg button {
+  height: 38px;
+  padding: 0 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-muted-foreground);
+}
+.pe-seg button.on {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+.pe-submit {
+  height: 46px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  font-weight: 700;
+}
+.pe-submit:hover {
+  background: var(--color-primary-hover);
+}
+
+/* Toolbar group dividers — the dist draws a full-height 1px #d9d9d9 line via
+   border-left on every non-first group. Replace it with a short, vertically
+   centered divider in the design-system border color (applied to all group
+   separators for a consistent look). */
+.pe-body .mce-toolbar .mce-btn-group:not(.mce-first) {
+  border-left: 0 !important;
+  position: relative;
+  margin-left: 9px !important;
+}
+.pe-body .mce-toolbar .mce-btn-group:not(.mce-first)::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 16px;
+  background: var(--color-border);
+}
+
+/* 더보기(more) button + 특수문자/코드블럭/HTML블럭 menu icons are NOT in the
+   0.7.21 dist sprite (they all fell back to sprite 0,0 = the image glyph), so
+   define them as clean inline SVGs. `background: none` first HARD-clears the
+   sprite so nothing can composite under the SVG (even a stale cached rule). */
+.pe-body .mce-i-more,
+.mce-menu .mce-i-charmap,
+.mce-menu .mce-i-codesample,
+.mce-menu .mce-i-code {
+  background: none !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 16px 16px !important;
+}
+/* 더보기 — three thin dots */
+.pe-body .mce-i-more {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='3.2' cy='8' r='1.1' fill='%233c4043'/><circle cx='8' cy='8' r='1.1' fill='%233c4043'/><circle cx='12.8' cy='8' r='1.1' fill='%233c4043'/></svg>") !important;
+}
+/* 특수문자 — Ω drawn as a clean stroke path (no font dependency) */
+.mce-menu .mce-i-charmap {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%233c4043' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'><path d='M3.5 12 L6.5 12 L6.5 10.6 C4.6 9.7 3.4 8 3.4 6.3 C3.4 4 5.5 2.6 8 2.6 C10.5 2.6 12.6 4 12.6 6.3 C12.6 8 11.4 9.7 9.5 10.6 L9.5 12 L12.5 12'/></svg>") !important;
+}
+/* 코드블럭 — { } braces */
+.mce-menu .mce-i-codesample {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%233c4043' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'><path d='M6.8 3 C5.6 3 5.9 6.9 4 8 C5.9 9.1 5.6 13 6.8 13'/><path d='M9.2 3 C10.4 3 10.1 6.9 12 8 C10.1 9.1 10.4 13 9.2 13'/></svg>") !important;
+}
+/* HTML블럭 — &lt;/&gt; markup */
+.mce-menu .mce-i-code {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%233c4043' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'><path d='M5.5 4.5 L2.8 8 L5.5 11.5'/><path d='M10.5 4.5 L13.2 8 L10.5 11.5'/><path d='M9.3 4 L6.7 12'/></svg>") !important;
+}
+
+/* When the 더보기 menu is open the button bg turns dark (#333); swap to white
+   dots so they stay visible instead of merging into a dark blob. */
+.pe-body .mce-active .mce-i-more,
+.pe-body .mce-btn.mce-active .mce-i-more,
+.pe-body .mce-menubtn.mce-active .mce-i-more {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='3.2' cy='8' r='1.1' fill='%23ffffff'/><circle cx='8' cy='8' r='1.1' fill='%23ffffff'/><circle cx='12.8' cy='8' r='1.1' fill='%23ffffff'/></svg>") !important;
+}
+
+/* BULLETPROOF menu-icon override — the dist styles menu icons via the
+   higher-specificity `.mce-menu-has-icons .mce-menu-item .mce-ico` rule, so a
+   lower-specificity override can lose (and a stale-cached sprite then composites
+   behind the SVG). Match with higher specificity, hard-clear the background,
+   zero the icon font, and remove any ::before/::after glyph so ONLY the SVG shows. */
+.mce-menu .mce-menu-item .mce-ico.mce-i-charmap,
+.mce-menu .mce-menu-item .mce-ico.mce-i-codesample,
+.mce-menu .mce-menu-item .mce-ico.mce-i-code {
+  background: none !important;
+  background-repeat: no-repeat !important;
+  background-position: 50% 50% !important;
+  background-size: 16px 16px !important;
+  font-size: 0 !important;
+  color: transparent !important;
+  vertical-align: middle !important;
+  position: relative !important;
+  top: -1px !important;
+}
+.mce-menu .mce-menu-item .mce-ico.mce-i-charmap::before,
+.mce-menu .mce-menu-item .mce-ico.mce-i-charmap::after,
+.mce-menu .mce-menu-item .mce-ico.mce-i-codesample::before,
+.mce-menu .mce-menu-item .mce-ico.mce-i-codesample::after,
+.mce-menu .mce-menu-item .mce-ico.mce-i-code::before,
+.mce-menu .mce-menu-item .mce-ico.mce-i-code::after {
+  content: none !important;
+  background: none !important;
+  display: none !important;
+}
+.mce-menu .mce-menu-item .mce-ico.mce-i-charmap {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%233c4043' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'><path d='M3.5 12 L6.5 12 L6.5 10.6 C4.6 9.7 3.4 8 3.4 6.3 C3.4 4 5.5 2.6 8 2.6 C10.5 2.6 12.6 4 12.6 6.3 C12.6 8 11.4 9.7 9.5 10.6 L9.5 12 L12.5 12'/></svg>") !important;
+}
+.mce-menu .mce-menu-item .mce-ico.mce-i-codesample {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%233c4043' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'><path d='M6.8 3 C5.6 3 5.9 6.9 4 8 C5.9 9.1 5.6 13 6.8 13'/><path d='M9.2 3 C10.4 3 10.1 6.9 12 8 C10.1 9.1 10.4 13 9.2 13'/></svg>") !important;
+}
+.mce-menu .mce-menu-item .mce-ico.mce-i-code {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%233c4043' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'><path d='M5.5 4.5 L2.8 8 L5.5 11.5'/><path d='M10.5 4.5 L13.2 8 L10.5 11.5'/><path d='M9.3 4 L6.7 12'/></svg>") !important;
+}
+
+/* 더보기 + 기본모드(모드 전환) dropdown item labels render at 16px, which is too
+   large. Bring them to the DS small-text step (text-sm = 0.875rem), matching the
+   글꼴 menu. styleFormat (size previews) and fontSelect are excluded here
+   (fontSelect is set to the same 0.875rem below). (인용/리스트 text is hidden.) */
+.mce-menu:not(.mce-styleFormat):not(.mce-fontSelect) .mce-menu-item .mce-text {
+  font-size: 0.875rem !important;
+}
+
+/* 코드블럭/HTML블럭(및 기타) 에디터 다이얼로그 푸터의 취소/확인 버튼 → 디자인 시스템 버튼.
+   .mce-window는 <body> 직속이지만 post-editor.css가 에디터 페이지에서만 로드돼 스코프 안전.
+   푸터 버튼은 inline-block 흐름이라 리사이즈/우측정렬이 자연스럽게 반영됨. */
+.mce-window .mce-foot .mce-container-body {
+  text-align: right;
+}
+.mce-window .mce-foot .mce-btn {
+  float: none !important;
+  background: var(--color-secondary) !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: none !important;
+  margin: 0 0 0 8px !important;
+}
+.mce-window .mce-foot .mce-btn:hover {
+  background: var(--color-ink-200) !important;
+}
+.mce-window .mce-foot .mce-btn button {
+  background: transparent !important;
+  padding: 7px 18px !important;
+}
+.mce-window .mce-foot .mce-btn .mce-txt {
+  color: var(--color-secondary-foreground) !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+}
+/* 확인(primary) */
+.mce-window .mce-foot .mce-btn.mce-primary {
+  background: var(--color-primary) !important;
+}
+.mce-window .mce-foot .mce-btn.mce-primary:hover {
+  background: var(--color-primary-hover) !important;
+}
+.mce-window .mce-foot .mce-btn.mce-primary .mce-txt {
+  color: var(--color-primary-foreground) !important;
+}
+
+/* codeblock/HTML 다이얼로그 헤더: 언어선택(.mce-codeblock-select-wrapper)이 absolute로
+   고정 위치라 더 긴 한글 제목 "코드블럭 삽입"을 덮어써 글자가 짤려 보임 → inline 흐름으로
+   바꿔 제목 뒤에 자연스럽게 오게 한다. */
+.mce-window .mce-title .mce-codeblock-select-wrapper {
+  position: static !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin-left: 10px !important;
+}
+/* 다이얼로그 푸터(버튼 행): 구분선을 DS 테두리 색으로, 버튼을 가장자리에서 띄운다.
+   box-sizing:border-box가 핵심 — TinyMCE는 푸터에 명시적 width/height를 인라인으로
+   넣는데(content-box 기준), 여기에 패딩을 주면 패딩이 그 위에 더해져 푸터가 모달보다
+   커진다(좁은 charmap/특수문자 모달에선 오른쪽·아래로 삐져나옴). border-box로 패딩을
+   안쪽에 가두고, 내부 flow 컨테이너 폭을 100%로 제한해 버튼 행이 모달 안에 들어오게 한다. */
+.mce-window .mce-foot {
+  box-sizing: border-box !important;
+  border-top: 1px solid var(--color-border) !important;
+  padding: 8px 16px !important;
+}
+.mce-window .mce-foot > .mce-container-body {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* WYSIWYG toolbar↔content divider. Two problems had to be solved so it matches
+   the HTML-source-mode divider exactly (a single clean 1px --color-border line):
+   (1) The .mce-edit-area TOP edge sits flush on the content <iframe>; a border
+       there merged with the iframe's compositing edge and rendered dark/doubled
+       (≈#c6c8cd) — so the edit-area border is removed.
+   (2) The iframe also paints a faint ~2px gray compositing SEAM at its very top
+       that no CSS on the iframe/edit-area can move or remove; left alone it sits
+       right under the divider and makes the line look ~3px thick.
+   Fix: draw the divider AND an opaque cover strip as a ::after on the toolbar
+   group, lifted above the iframe via z-index, so the strip hides the seam and the
+   strip's 1px border-top is the only visible line. The iframe's top 6px is empty
+   body padding (content starts at 16px), so the cover never clips content;
+   pointer-events:none keeps clicks falling through to the editor.
+   Scoped to :not(.pe-body--source): in source mode the .pe-source textarea already
+   supplies the divider (no iframe, no seam), so this must not add a second line. */
+.pe-body .mce-tinymce .mce-edit-area {
+  border-top: 0 !important;
+}
+.pe-body:not(.pe-body--source) .mce-tinymce .mce-toolbar-grp {
+  border-bottom: 0 !important;
+  position: relative;
+  z-index: 1;
+}
+.pe-body:not(.pe-body--source) .mce-tinymce .mce-toolbar-grp::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 6px;
+  background: var(--color-card);
+  border-top: 1px solid var(--color-border);
+  pointer-events: none;
+}
+
+/* 특수문자(kCharmap) 모달 — 실제 티스토리 캡처(post-editor.min CSS) 기반 + 좌우 여백 확대.
+   TinyMCE classic은 모달 폭을 글자 그리드에 꽉 맞춰 인라인(window/body/container width)으로
+   고정하므로 좌우가 타이트하다. 여백을 늘리려면 그 인라인 폭을 덮어쓰고 다시 가운데 정렬한다.
+   charmap 창은 215자로 크기가 고정이라 아래 고정 px값이 안정적이다. 모든 규칙은
+   :has(.mce-charmap)로 charmap 창에만 스코프(코드블럭/HTML 다이얼로그 영향 없음).
+   (창 left:50% 고정 = 드래그 비활성. 유틸 picker라 무방.) */
+.mce-window:has(.mce-charmap) {
+  width: 728px !important; /* +2px border = 730 */
+  left: 50% !important;
+  margin-left: -365px !important; /* -730/2 → 뷰포트 가운데 */
+}
+.mce-window:has(.mce-charmap) .mce-reset,
+.mce-window:has(.mce-charmap) .mce-window-body,
+.mce-window:has(.mce-charmap) .mce-foot {
+  width: 728px !important;
+}
+/* 글자 그리드 컨테이너(628px)를 넓어진 본문 안에서 가운데로 */
+.mce-window:has(.mce-charmap) .mce-window-body > .mce-abs-layout-item.mce-first {
+  left: 50% !important;
+  margin-left: -314px !important; /* -628/2 */
+}
+/* 제목/구분선: 폭을 글자열(622px)에 맞춰 가운데 정렬 → 구분선이 그리드와 정확히 일치 */
+.mce-window:has(.mce-charmap) .mce-window-head {
+  width: 622px !important;
+  margin: 0 auto !important;
+  height: 80px;
+  padding: 0;
+  border-bottom: 2px solid var(--color-foreground);
+}
+.mce-window:has(.mce-charmap) .mce-window-head .mce-title {
+  padding: 36px 0 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+.mce-window .mce-charmap {
+  width: 628px;
+  padding: 0 32px;
+}
+.mce-window .mce-charmap td {
+  text-align: center;
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+.mce-window .mce-charmap td div {
+  width: 31px;
+  height: 31px;
+  line-height: 31px;
+  margin: 0 auto;
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--color-foreground);
+}
+.mce-window .mce-charmap td div:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
