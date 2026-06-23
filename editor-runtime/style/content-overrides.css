@@ -19,8 +19,12 @@ html {
   margin: 0 0 0.9em;
   line-height: 1.7;
 }
+/* Beat KEDITOR's editor-content.css `.content p + p { margin: 0 }` (same
+   specificity, loaded later) so EVERY consecutive paragraph keeps the same gap
+   — otherwise only the first paragraph of a run gets spacing and the rest
+   collapse to 0. */
 .content p + p {
-  margin-top: 0;
+  margin: 0 0 0.9em;
 }
 
 figure[data-ke-type='image'][data-mce-selected='ke'] img,
@@ -77,6 +81,13 @@ figure[data-ke-type='image'][data-ke-style='widthContent'] {
 figure[data-ke-type] figcaption {
   font-size: 13px;
   color: #777;
+  text-align: center;
+}
+/* the grid caption sits on its own full-width row so it centers under the grid
+   (otherwise it's a shrink-wrapped flex item pinned to the left) */
+figure[data-ke-type='imageGrid'] figcaption {
+  flex: 0 0 100%;
+  width: 100%;
 }
 
 .mce-content-body div.mce-resizehandle {
