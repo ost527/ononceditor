@@ -46,6 +46,11 @@ export type RichTextEditorProps = {
   /** Downscale inserted images so their longest side is <= this many px (in the
    *  browser, before upload). Set to 0 to disable. Default 1920. */
   maxImageDimension?: number;
+  /** Endpoint that returns OpenGraph metadata for a URL as JSON
+   *  ({title,description,image,siteName}). When set, a bare non-YouTube URL on
+   *  its own line is shown live as a link-preview card in the editor (it still
+   *  serializes back to a bare URL). Omit to disable link cards. */
+  linkPreviewUrl?: string;
 };
 
 /**
@@ -66,6 +71,7 @@ export function RichTextEditor({
   baseUrl = "/editor-runtime",
   initialHeight = DEFAULT_BODY_HEIGHT,
   maxImageDimension = 1920,
+  linkPreviewUrl,
 }: RichTextEditorProps) {
   // Per-instance DOM id so multiple editors can coexist on one page.
   const editorId = "rte-" + useId().replace(/[^a-zA-Z0-9_-]/g, "");
@@ -159,7 +165,7 @@ export function RichTextEditor({
           // typical published-article column; adjust in your published styles.
           content_style:
             "html{overflow-y:auto !important;text-rendering:optimizeLegibility;font-feature-settings:'ss01','cv01';}" +
-            "body.content{max-width:1136px;margin:0 auto;padding:16px 0;box-sizing:border-box;position:relative;color:#0f172a;letter-spacing:-0.011em;-webkit-font-smoothing:antialiased;font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,Roboto,'Helvetica Neue','Segoe UI','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;}" +
+            "body.content{max-width:1136px;margin:0 auto;padding:16px 0;box-sizing:border-box;position:relative;color:#0f172a;letter-spacing:normal;-webkit-font-smoothing:antialiased;font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,Roboto,'Helvetica Neue','Segoe UI','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;}" +
             "body.content a{color:#4f46e5;text-decoration:underline;text-underline-offset:0.15em;}" +
             "body.content>*:first-child{margin-top:0;}" +
             "body.content.is-empty::before{content:'내용을 입력해주세요';color:#94a3b8;position:absolute;top:16px;left:0;pointer-events:none;}",
@@ -237,6 +243,183 @@ export function RichTextEditor({
               }
               onChangeRef.current(html);
             });
+
+            // --- auto-embed: a paragraph whose sole content is a URL becomes a
+            //     live, non-editable block in the editor — a YouTube player, or
+            //     (when linkPreviewUrl is set) an OpenGraph link card. YouTube
+            //     serializes to <figure class="oe-embed"><iframe …/embed/ID>; link
+            //     cards serialize BACK to a bare <p>URL</p> (see GetContent below)
+            //     so a publisher can render them with a single renderer. ---
+            const ytEmbedId = (raw: string): string | null => {
+              let u: URL;
+              try {
+                u = new URL(raw);
+              } catch {
+                return null;
+              }
+              const host = u.hostname.replace(/^www\./, "").toLowerCase();
+              let id: string | null = null;
+              if (host === "youtu.be") {
+                id = u.pathname.split("/")[1] || null;
+              } else if (
+                host === "youtube.com" ||
+                host === "m.youtube.com" ||
+                host === "music.youtube.com" ||
+                host === "youtube-nocookie.com"
+              ) {
+                if (u.pathname === "/watch") {
+                  id = u.searchParams.get("v");
+                } else {
+                  const m = u.pathname.match(/^\/(?:embed|shorts|v|live)\/([^/?#]+)/);
+                  id = m ? m[1] : null;
+                }
+              }
+              return id && /^[A-Za-z0-9_-]{6,20}$/.test(id) ? id : null;
+            };
+            const escAttr = (s: string) =>
+              s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const escHtml = (s: string) =>
+              s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const hostOf = (raw: string) => {
+              try {
+                return new URL(raw).hostname.replace(/^www\./, "");
+              } catch {
+                return raw;
+              }
+            };
+            const cardInnerHtml = (url: string, d: any) => {
+              const domain = hostOf(url);
+              const title = escHtml((d && d.title) || domain);
+              const site = escHtml((d && d.siteName) || domain);
+              const desc = d && d.description ? '<span class="oe-card__desc">' + escHtml(d.description) + "</span>" : "";
+              const thumb = d && d.image ? '<span class="oe-card__thumb"><img src="' + escAttr(d.image) + '" alt=""></span>' : "";
+              return (
+                '<a class="oe-card__link" href="' +
+                escAttr(url) +
+                '" target="_blank" rel="noopener noreferrer nofollow">' +
+                thumb +
+                '<span class="oe-card__body"><span class="oe-card__title">' +
+                title +
+                "</span>" +
+                desc +
+                '<span class="oe-card__domain">' +
+                site +
+                "</span></span></a>"
+              );
+            };
+            let autoEmbedding = false;
+            const inflight = new Set<string>();
+            const noRetry = new Set<string>();
+            const ensureTrailing = (fig: any) => {
+              if (!fig.nextSibling) fig.parentNode.appendChild(ed.dom.create("p", {}, "<br>"));
+            };
+            // Mutate inside a bookmark so the caret survives node replacement,
+            // then push the new HTML out via onChange.
+            const withSelection = (fn: () => void) => {
+              autoEmbedding = true;
+              const bookmark = ed.selection.getBookmark(2, true);
+              try {
+                fn();
+              } finally {
+                try {
+                  ed.selection.moveToBookmark(bookmark);
+                } catch {
+                  /* the bookmarked node may have been replaced; ignore */
+                }
+                autoEmbedding = false;
+                try {
+                  onChangeRef.current(ed.getContent());
+                } catch {
+                  /* kImage serialize throws mid-upload; ignore */
+                }
+              }
+            };
+            const autoEmbed = () => {
+              if (autoEmbedding) return;
+              const body = ed.getBody && ed.getBody();
+              if (!body) return;
+              const yts: { p: any; id: string }[] = [];
+              const links: { p: any; url: string }[] = [];
+              body.querySelectorAll("p").forEach((p: any) => {
+                const text = (p.textContent || "").trim();
+                if (!text || !/^https?:\/\//i.test(text)) return;
+                // Only a paragraph whose sole content is the URL (plain text or a
+                // single auto-linked <a>).
+                const soloLink =
+                  p.children.length === 1 &&
+                  p.children[0].tagName === "A" &&
+                  (p.children[0].textContent || "").trim() === text;
+                if (!soloLink && p.children.length !== 0) return;
+                const id = ytEmbedId(text);
+                if (id) yts.push({ p, id });
+                else links.push({ p, url: text });
+              });
+              if (yts.length) {
+                withSelection(() => {
+                  yts.forEach(({ p, id }) => {
+                    const fig = ed.dom.create(
+                      "figure",
+                      { class: "oe-embed", "data-oe-embed": "youtube", contenteditable: "false" },
+                      '<iframe src="https://www.youtube-nocookie.com/embed/' +
+                        id +
+                        '" frameborder="0" allowfullscreen></iframe>',
+                    );
+                    p.parentNode.replaceChild(fig, p);
+                    ensureTrailing(fig);
+                  });
+                });
+              }
+              // Link cards need an OG endpoint — opt-in via linkPreviewUrl.
+              if (linkPreviewUrl) {
+                links.forEach(({ p, url }) => {
+                  if (inflight.has(url) || noRetry.has(url)) return;
+                  inflight.add(url);
+                  fetch(linkPreviewUrl + "?url=" + encodeURIComponent(url))
+                    .then((r) => (r.ok ? r.json() : null))
+                    .then((data) => {
+                      inflight.delete(url);
+                      // A failed/empty lookup: don't retry it on every keystroke.
+                      if (!data) {
+                        noRetry.add(url);
+                        return;
+                      }
+                      // Re-validate: the node may have been edited/removed while
+                      // the request was in flight.
+                      if (autoEmbedding || !p.parentNode || (p.textContent || "").trim() !== url) return;
+                      withSelection(() => {
+                        const fig = ed.dom.create(
+                          "figure",
+                          { class: "oe-card", "data-oe-card": url, contenteditable: "false" },
+                          cardInnerHtml(url, data),
+                        );
+                        p.parentNode.replaceChild(fig, p);
+                        ensureTrailing(fig);
+                      });
+                    })
+                    .catch(() => {
+                      inflight.delete(url);
+                      noRetry.add(url);
+                    });
+                });
+              }
+            };
+            // Serialize a link card BACK to a bare <p>URL</p> so saved content
+            // stays a plain URL (the publisher renders the card). YouTube embeds
+            // are kept as <figure><iframe> for the publisher to convert.
+            ed.on("GetContent", (e: any) => {
+              if (!e.content || e.content.indexOf("oe-card") === -1) return;
+              e.content = e.content.replace(
+                /<figure\b[^>]*\bdata-oe-card="([^"]*)"[^>]*>[\s\S]*?<\/figure>/gi,
+                (_m: string, url: string) => "<p>" + url + "</p>",
+              );
+            });
+            // Paste (복붙) is the common case; Enter finishes a typed/auto-linked
+            // line; SetContent covers loading saved content with a bare URL.
+            ed.on("paste", () => window.setTimeout(autoEmbed, 50));
+            ed.on("keyup", (e: any) => {
+              if (e.keyCode === 13) window.setTimeout(autoEmbed, 0);
+            });
+            ed.on("SetContent", () => window.setTimeout(autoEmbed, 0));
           },
         });
       })
