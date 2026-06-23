@@ -10,9 +10,10 @@ page layout are entirely up to you.
 
 - Toolbar: 문단모양 · 글꼴 · B/I/U/S · 글자색/배경색 · 정렬 · 이미지(grid) · 인용 · 표 · 링크 · 리스트 · 구분선 · 더보기(특수문자/코드블럭/HTML블럭) · 기본모드(HTML source)
 - Inline image upload to **your** endpoint, drag-to-grid layouts, code blocks, 215-char special-character picker.
+- **Auto-embed**: a YouTube URL alone on a line becomes a responsive player; set `linkPreviewUrl` and any other lone URL becomes a live OpenGraph link card. On save they serialize to clean HTML (`<figure><iframe>` / a bare URL) for your page to render.
 - Outputs plain HTML — sanitize it on your side before publishing (e.g. DOMPurify).
 
-> Status: `0.1.0`, extracted from the `ononc` project. The bundled editor
+> Status: `0.2.0`, extracted from the `ononc` project. The bundled editor
 > runtime is LGPL-2.1 (see [License](#license)).
 
 ## Install
@@ -75,6 +76,8 @@ export function MyEditor() {
 | `uploadUrl` | `string` | `/api/upload` | Endpoint that receives image uploads. |
 | `baseUrl` | `string` | `/editor-runtime` | Where the runtime assets are served. |
 | `initialHeight` | `number` | `620` | Initial editor body height (px). |
+| `maxImageDimension` | `number` | `1920` | Downscale inserted images so their longest side is ≤ this many px (in-browser, before upload); `0` disables. |
+| `linkPreviewUrl` | `string` | – | Endpoint returning OpenGraph JSON (`{title,description,image,siteName}`) for a URL. When set, a bare non-YouTube URL on its own line becomes a live link-preview card in the editor (serialized back to a bare URL on save). Omit to disable. |
 
 ### Upload endpoint contract
 
