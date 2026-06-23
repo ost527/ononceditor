@@ -1,5 +1,7 @@
 # Changelog
 
+**English** | [한국어](./CHANGELOG.ko.md)
+
 All notable changes to **ononceditor** are documented here. This project adheres
 to [Semantic Versioning](https://semver.org/).
 

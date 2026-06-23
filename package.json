@@ -21,6 +21,7 @@
     "README.md",
     "README.ko.md",
     "CHANGELOG.md",
+    "CHANGELOG.ko.md",
     "LICENSE"
   ],
   "main": "./dist/index.cjs",
